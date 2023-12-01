@@ -229,5 +229,3 @@ if __name__ == '__main__':
         print(occ)
     except Exception as e:
         print("Error: ", e)
-
-# R1(A);W1(A);R2(A);C1;W2(A);C2;

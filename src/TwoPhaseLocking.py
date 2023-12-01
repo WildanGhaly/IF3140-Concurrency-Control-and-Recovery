@@ -229,14 +229,4 @@ if __name__ == "__main__":
         exit(1)
 
 
-# R1(X);R2(X);R1(Y);C1;C2
-# R1(A);R2(B);W1(A);R1(B);W3(A);W4(B);W2(B);R1(C);C1;C2;C3;C4
-# R1(A);W2(A);R2(A);R3(A);W1(A);C1;C2;C3
-# R1(X);W2(X);W2(Y);W3(Y);W1(X);C1;C2;C3
-# R1(X);R2(Y);W1(Y);W1(X);W1(X);C1;C2
-# R1(X);R2(X);W1(X);W2(X);W3(X);C1;C2;C3
-# R1(X);R1(X);R2(X);R3(X);W1(X);W2(X);W3(X);C1;C2;C3
-# R1(X);R2(X);W2(X);C1;C2
-# R1(X);R2(X);W1(X);C1;C2
-# R1(X);R2(X);R3(X);W1(X);W2(X);W3(X);C1;C2;C3
-# R1(X);R2(X);W1(X);W2(X);C1;C2
+

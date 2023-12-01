@@ -113,6 +113,8 @@ function App() {
         <label for="algorithm1">Two Phase Locking</label><br/>
         <input type="radio" id="occ" name="occ" value="occ" checked={algorithm === 'occ'} onChange={handleAlgorithmChange} />
         <label for="algorithm2">Optimistic Concurrency Control</label><br/>
+        <input type="radio" id="mvcc" name="mvcc" value="mvcc" checked={algorithm === 'mvcc'} onChange={handleAlgorithmChange} />
+        <label for="algorithm3">Multiversion Timestamp Ordering Concurrency Control</label><br/>
       </div>
         <div className='column'>
           <div className='table-container'>

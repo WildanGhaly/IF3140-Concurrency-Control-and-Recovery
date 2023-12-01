@@ -2,6 +2,7 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 from OCC import OCC
 from TwoPhaseLocking import TwoPhaseLocking
+from MVCC import MVCC, parse_input
 
 
 app = Flask(__name__)
@@ -29,6 +30,21 @@ def process_sequence():
             lock = TwoPhaseLocking(input_seq)
             lock.run()
             result_string = lock.result_string()
+            return jsonify({'result': result_string})
+        except Exception as e:
+            return jsonify({'error': str(e)})
+    
+
+@app.route('/mvcc', methods=['POST'])
+def process_mvcc():
+        try:
+            data = request.json
+            input_seq = data.get('input_seq')
+            sequence = parse_input(input_seq)
+            lock = MVCC(sequence)
+            lock.run()
+            result_string = lock.result_string
+            print(result_string)
             return jsonify({'result': result_string})
         except Exception as e:
             return jsonify({'error': str(e)})

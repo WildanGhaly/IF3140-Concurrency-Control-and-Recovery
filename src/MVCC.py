@@ -31,7 +31,7 @@ class MVCC:
                 self.transaction_counter[tx], self.transaction_counter[tx]), 'version': self.transaction_counter[tx]})
             temp = (f"T{tx}: W({item}) at version {self.transaction_counter[tx]}. Timestamp({item}): ({self.transaction_counter[tx]}, {self.transaction_counter[tx]}).")
             print(temp)
-            self.result_string += temp + ";"
+            self.result_string += temp + "; "
             
             self.counter += 1
         else:
@@ -55,7 +55,7 @@ class MVCC:
                     max_r_timestamp, self.transaction_counter[tx]), 'version': self.transaction_counter[tx]})
                 temp = (f"T{tx}: W({item}) at version {self.transaction_counter[tx]}. Timestamp({item}): ({max_r_timestamp}, {self.transaction_counter[tx]}).")
                 print(temp)
-                self.result_string += temp + ";"
+                self.result_string += temp + "; "
                 self.counter += 1
 
 
@@ -69,7 +69,7 @@ class MVCC:
                     self.transaction_counter[tx], 0), 'version': 0})
                 temp = (f"T{tx}: R({item}) at version 0. Timestamp({item}): ({self.transaction_counter[tx]}, 0).")
                 print(temp)
-                self.result_string += temp + ";"
+                self.result_string += temp + "; "
                 self.counter += 1
             else:
                 max_index = self.get_max_version_index_by_write(item)
@@ -82,7 +82,7 @@ class MVCC:
                         self.transaction_counter[tx], max_w_timestamp)
                 temp = (f"T{tx} R({item}) at version {max_version}. Timestamp({item}): {self.version_table[item][max_index]['timestamp']}.")
                 print(temp)
-                self.result_string += temp + ";"
+                self.result_string += temp + "; "
                 self.counter += 1
         else:
             max_index = self.get_max_version_index_by_write(item)
@@ -95,7 +95,7 @@ class MVCC:
                     self.transaction_counter[tx], max_w_timestamp)
             temp = (f"T{tx}: R({item}) at version {max_version}. Timestamp({item}): {self.version_table[item][max_index]['timestamp']}.")
             print(temp)
-            self.result_string += temp + ";"
+            self.result_string += temp + "; "
             self.counter += 1
 
     def rollback(self, tx):
@@ -114,19 +114,19 @@ class MVCC:
         self.transaction_counter[tx] = self.counter
         temp = (f"T{tx}: rolled back. Assigned new timestamp: {self.transaction_counter[tx]}.")
         print(temp)
-        self.result_string += temp + ";"
+        self.result_string += temp + "; "
         
     def print_sequence(self):
         for i in range(len(self.sequence)):
             if (self.sequence[i]['action'] == 'rollback'):
                 temp = (f"T{self.sequence[i]['tx']}: rolled back.")
                 print(temp)
-                self.result_string += temp + ";"
+                self.result_string += temp + "; "
             elif (self.sequence[i]['action'] != 'aborted'):
                 temp = (self.sequence[i]['item'], self.sequence[i]['tx'],
                       self.sequence[i]['timestamp'], self.sequence[i]['version'])
                 print(temp)
-                self.result_string += temp + ";"
+                self.result_string += temp + "; "
 
     def run(self):
         while len(self.input_sequence) > 0:
@@ -172,4 +172,3 @@ def main():
 if __name__ == "__main__":
     main()
     
-# R5(A);R2(B);R1(B);W3(B);W3(C);R5(C);R2(C);R1(A);R4(D);W3(D);W5(B);W5(C)
