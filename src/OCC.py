@@ -1,5 +1,4 @@
 import math
-from Color import*
 
 class Transaction:
     def __init__(self, tx_id):
@@ -15,16 +14,12 @@ class Transaction:
     def __str__(self):
         read_set_str    = ", ".join(self.reads)
         write_set_str   = ", ".join(self.writes)
-        color_reset     = "\033[0m"
-        color_bold      = "\033[1m"
-        color_green     = "\033[92m"
-        color_cyan      = "\033[96m"
 
         return (
-            f"{color_bold}Transaction {self.tx_num}:{color_reset}\n"
-            f"\t{color_cyan}Read Set:{color_reset} {color_green}{read_set_str}{color_reset}\n"
-            f"\t{color_cyan}Write Set:{color_reset} {color_green}{write_set_str}{color_reset}\n"
-            f"\t{color_cyan}Timestamps:{color_reset} {color_green}{self.timestamps}{color_reset}"
+            f"Transaction {self.tx_num}:\n"
+            f"\tRead Set:{read_set_str}\n"
+            f"\tWrite Set:{write_set_str}\n"
+            f"\tTimestamps:{self.timestamps}"
         )
 
 class OCC:
@@ -142,7 +137,7 @@ class OCC:
             self.handle_aborted_transaction(cmd, transaction_id)
 
     def handle_aborted_transaction(self, cmd, transaction_id) -> None:
-        print(f"{color_bold}Transaction {transaction_id} {color_red} is aborted {color_reset}")
+        print(f"Transaction {transaction_id} is aborted")
         self.rollback_transactions.append(transaction_id)
         self.history_transaction.append(
             {"operation": cmd['operation'], "transaction": transaction_id, "status": "aborted"}
@@ -219,11 +214,11 @@ class OCC:
         res = ""
         for cmd in self.history_transaction:
             if cmd['status'] == 'success':
-                res += f"{color_bold}{cmd['operation']}{cmd['transaction']}({cmd['table']}){color_reset}\n"
+                res += f"{cmd['operation']}{cmd['transaction']}({cmd['table']})\n"
             elif cmd['status'] == 'commit':
-                res += f"{color_bold}{cmd['operation']}{cmd['transaction']} - {color_green}commit{color_reset}\n"
+                res += f"{cmd['operation']}{cmd['transaction']} - commit\n"
             elif cmd['status'] == 'aborted':
-                res += f"{color_bold}{cmd['operation']}{cmd['transaction']} - {color_red}aborted{color_reset}\n"
+                res += f"{cmd['operation']}{cmd['transaction']} - aborted\n"
         return res
 
 
@@ -234,3 +229,5 @@ if __name__ == '__main__':
         print(occ)
     except Exception as e:
         print("Error: ", e)
+
+# R1(A);W1(A);R2(A);C1;W2(A);C2;
