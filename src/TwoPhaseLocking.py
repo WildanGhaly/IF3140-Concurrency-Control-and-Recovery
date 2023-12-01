@@ -11,7 +11,6 @@ class TwoPhaseLocking:
         self.process_input_sequence(input_seq)
 
     def process_input_sequence(self, input_seq: str):
-        # Memproses urutan input dan memvalidasi setiap operasi.
         if input_seq.endswith(';'):
             input_seq = input_seq[:-1]
 
@@ -24,7 +23,6 @@ class TwoPhaseLocking:
         self.verify_table_names()
 
     def validate_and_store_operation(self, input: str):
-        # Validasi dan simpan operasi tunggal.
         operation = input[0]
         if operation in ('R', 'W'):
             self.store_read_write_operation(input, operation)
@@ -34,7 +32,6 @@ class TwoPhaseLocking:
             raise ValueError("Invalid operation detected")
 
     def store_read_write_operation(self, input: str, operation: str):
-        # Simpan operasi baca/tulis.
         transaction_id = int(input[1])
         table_name = input[3]
         self.seq.append({"operation": operation, "transaction": transaction_id, "table": table_name})
@@ -43,7 +40,6 @@ class TwoPhaseLocking:
             self.timestamp.append(transaction_id)
 
     def store_commit_operation(self, input: str):
-        # Simpan operasi commit.
         transaction_id = int(input[1])
         self.seq.append({"operation": 'C', "transaction": transaction_id})
 
@@ -51,12 +47,10 @@ class TwoPhaseLocking:
             raise ValueError("Transaction has no read or write operation")
 
     def verify_commit_operations(self):
-        # Verifikasi bahwa setiap transaksi memiliki operasi commit.
         if len([x for x in self.seq if x["operation"] == 'C']) != len(set(self.timestamp)):
             raise ValueError("Missing commit operation")
 
     def verify_table_names(self):
-        # Verifikasi bahwa nama tabel valid.
         invalid_tables = [x for x in self.seq if x["operation"] in ('R', 'W') and (len(x["table"]) != 1 or not x["table"].isalpha())]
         if invalid_tables:
             raise ValueError("Invalid table name")
@@ -226,13 +220,23 @@ class TwoPhaseLocking:
 
 if __name__ == "__main__":
     try:
-        lock = TwoPhaseLocking(input("Enter the seq: "))
+        lock = TwoPhaseLocking(input("Enter Concurrency Control Sequence: "))
         lock.run()
         print(lock.result_string())
-        # print(lock.transaction_history)
 
     except (ValueError, IndexError) as e:
         print("Error: ", e)
         exit(1)
 
 
+# R1(X);R2(X);R1(Y);C1;C2
+# R1(A);R2(B);W1(A);R1(B);W3(A);W4(B);W2(B);R1(C);C1;C2;C3;C4
+# R1(A);W2(A);R2(A);R3(A);W1(A);C1;C2;C3
+# R1(X);W2(X);W2(Y);W3(Y);W1(X);C1;C2;C3
+# R1(X);R2(Y);W1(Y);W1(X);W1(X);C1;C2
+# R1(X);R2(X);W1(X);W2(X);W3(X);C1;C2;C3
+# R1(X);R1(X);R2(X);R3(X);W1(X);W2(X);W3(X);C1;C2;C3
+# R1(X);R2(X);W2(X);C1;C2
+# R1(X);R2(X);W1(X);C1;C2
+# R1(X);R2(X);R3(X);W1(X);W2(X);W3(X);C1;C2;C3
+# R1(X);R2(X);W1(X);W2(X);C1;C2
